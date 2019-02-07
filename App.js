@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, TextInput, Keyboard, Animated, Button, KeyboardAvoidingView } from 'react-native';
 
 import firebase from 'react-native-firebase';
+import validator from 'validator';
 
 const DissmissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -35,13 +36,13 @@ export default class App extends React.Component {
   }
 
   validateEmail(text) {
-    // if (validator.isEmail(text)) {
-    //   this.firstEmailTry = false;
-    //   this.setState({ borderColor: this.colors.green });
-    //   this.passwordFieldFadeIn()
-    // } else if (!this.firstEmailTry) {
-    //   this.setState({ borderColor: this.colors.red });
-    // }
+    if (validator.isEmail(text)) {
+      this.firstEmailTry = false;
+      this.setState({ borderColor: this.colors.green });
+      this.passwordFieldFadeIn()
+    } else if (!this.firstEmailTry) {
+      this.setState({ borderColor: this.colors.red });
+    }
   }
 
   validatePassword(text) {
