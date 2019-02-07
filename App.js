@@ -23,22 +23,16 @@ export default class App extends React.Component {
     this.state = {
       borderColor: this.colors.gray,
       passwordBorderColor: this.colors.gray,
-      fadeAnimation: new Animated.Value(0)
+      fadeAnimation: new Animated.Value(0),
+      currentEmail: '',
+      currentPassword: '',
     };
-  }
-
-  async componentDidMount() {
-    // TODO: You: Do firebase things
-    // const { user } = await firebase.auth().signInAnonymously();
-    // console.warn('User -> ', user.toJSON());
-
-    // await firebase.analytics().logEvent('foo', { bar: '123' });
   }
 
   validateEmail(text) {
     if (validator.isEmail(text)) {
       this.firstEmailTry = false;
-      this.setState({ borderColor: this.colors.green });
+      this.setState({ borderColor: this.colors.green, currentEmail: text });
       this.passwordFieldFadeIn()
     } else if (!this.firstEmailTry) {
       this.setState({ borderColor: this.colors.red });
@@ -47,7 +41,7 @@ export default class App extends React.Component {
 
   validatePassword(text) {
     if (text.length > 6) {
-      this.setState({ passwordBorderColor: this.colors.green });
+      this.setState({ passwordBorderColor: this.colors.green, currentPassword: text });
       this.firstPasswordTry = false;
     } else if (!this.firstPasswordTry) {
       this.setState({ passwordBorderColor: this.colors.red });
@@ -62,6 +56,10 @@ export default class App extends React.Component {
         duration: 1000
       }
     ).start();
+  }
+
+  async login() {
+    var output = await firebase.auth().signInWithEmailAndPassword(this.state.currentEmail, this.state.currentPassword);
   }
 
   render() {
@@ -88,7 +86,7 @@ export default class App extends React.Component {
             />
           </Animated.View>
           <Button
-            onPress={() => console.log('Signed in')}
+            onPress={() => this.login()}
             title='Sign in'
           />
         </View>
