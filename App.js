@@ -1,12 +1,29 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, View, TouchableWithoutFeedback, TextInput, Keyboard, Animated, Button, KeyboardAvoidingView } from 'react-native';
 
 import firebase from 'react-native-firebase';
 
+const DissmissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
+
 export default class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
+  constructor(props) {
+    super(props);
+    this.firstEmailTry = true;
+    this.firstPasswordTry = true;
+    this.colors = {
+      green: '#51db39',
+      red: '#f44242',
+      gray: '#a5adb0'
+    }
+    this.state = {
+      borderColor: this.colors.gray,
+      passwordBorderColor: this.colors.gray,
+      fadeAnimation: new Animated.Value(0)
+    };
   }
 
   async componentDidMount() {
@@ -14,89 +31,91 @@ export default class App extends React.Component {
     // const { user } = await firebase.auth().signInAnonymously();
     // console.warn('User -> ', user.toJSON());
 
-    // await firebase.analytics().logEvent('foo', { bar: '123'});
+    // await firebase.analytics().logEvent('foo', { bar: '123' });
+  }
+
+  validateEmail(text) {
+    // if (validator.isEmail(text)) {
+    //   this.firstEmailTry = false;
+    //   this.setState({ borderColor: this.colors.green });
+    //   this.passwordFieldFadeIn()
+    // } else if (!this.firstEmailTry) {
+    //   this.setState({ borderColor: this.colors.red });
+    // }
+  }
+
+  validatePassword(text) {
+    if (text.length > 6) {
+      this.setState({ passwordBorderColor: this.colors.green });
+      this.firstPasswordTry = false;
+    } else if (!this.firstPasswordTry) {
+      this.setState({ passwordBorderColor: this.colors.red });
+    }
+  }
+
+  passwordFieldFadeIn() {
+    Animated.timing(
+      this.state.fadeAnimation,
+      {
+        toValue: 1,
+        duration: 1000
+      }
+    ).start();
   }
 
   render() {
     return (
-      <ScrollView>
+      <DissmissKeyboard>
         <View style={styles.container}>
-          <Image source={require('./assets/ReactNativeFirebase.png')} style={[styles.logo]}/>
-          <Text style={styles.welcome}>
-            Welcome to {'\n'} React Native Firebase
-          </Text>
-          <Text style={styles.instructions}>
-            To get started, edit App.js
-          </Text>
-          {Platform.OS === 'ios' ? (
-            <Text style={styles.instructions}>
-              Press Cmd+R to reload,{'\n'}
-              Cmd+D or shake for dev menu
-            </Text>
-          ) : (
-            <Text style={styles.instructions}>
-              Double tap R on your keyboard to reload,{'\n'}
-              Cmd+M or shake for dev menu
-            </Text>
-          )}
-          <View style={styles.modules}>
-            <Text style={styles.modulesHeader}>The following Firebase modules are pre-installed:</Text>
-            {firebase.admob.nativeModuleExists && <Text style={styles.module}>admob()</Text>}
-            {firebase.analytics.nativeModuleExists && <Text style={styles.module}>analytics()</Text>}
-            {firebase.auth.nativeModuleExists && <Text style={styles.module}>auth()</Text>}
-            {firebase.config.nativeModuleExists && <Text style={styles.module}>config()</Text>}
-            {firebase.crashlytics.nativeModuleExists && <Text style={styles.module}>crashlytics()</Text>}
-            {firebase.database.nativeModuleExists && <Text style={styles.module}>database()</Text>}
-            {firebase.firestore.nativeModuleExists && <Text style={styles.module}>firestore()</Text>}
-            {firebase.functions.nativeModuleExists && <Text style={styles.module}>functions()</Text>}
-            {firebase.iid.nativeModuleExists && <Text style={styles.module}>iid()</Text>}
-            {firebase.invites.nativeModuleExists && <Text style={styles.module}>invites()</Text>}
-            {firebase.links.nativeModuleExists && <Text style={styles.module}>links()</Text>}
-            {firebase.messaging.nativeModuleExists && <Text style={styles.module}>messaging()</Text>}
-            {firebase.notifications.nativeModuleExists && <Text style={styles.module}>notifications()</Text>}
-            {firebase.perf.nativeModuleExists && <Text style={styles.module}>perf()</Text>}
-            {firebase.storage.nativeModuleExists && <Text style={styles.module}>storage()</Text>}
-          </View>
+          <TextInput
+            style={[styles.inputFields, { borderColor: this.state.borderColor }]}
+            placeholder="Email or phone number"
+            blurOnSubmit={true}
+            onChangeText={(text) => this.validateEmail(text)}
+          />
+          <Animated.View style={{
+            alignItems: 'center',
+            width: '100%',
+            opacity: this.state.fadeAnimation
+          }}>
+            <TextInput
+              style={[styles.inputFields, { borderColor: this.state.passwordBorderColor }]}
+              placeholder="Password"
+              blurOnSubmit={true}
+              secureTextEntry={true}
+              onChangeText={(text) => this.validatePassword(text)}
+            />
+          </Animated.View>
+          <Button
+            onPress={() => console.log('Signed in')}
+            title='Sign in'
+          />
         </View>
-      </ScrollView>
+      </DissmissKeyboard>
     );
   }
 }
 
-const styles = StyleSheet.create({
+var styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#fff',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    justifyContent: 'center',
   },
-  logo: {
-    height: 120,
-    marginBottom: 16,
-    marginTop: 64,
-    padding: 10,
-    width: 135,
+  inputFields: {
+    height: 45,
+    width: '75%',
+    borderStyle: 'solid',
+    borderColor: '#a5adb0',
+    borderWidth: 2,
+    padding: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 10,
+    margin: 5
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  modules: {
-    margin: 20,
-  },
-  modulesHeader: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  module: {
-    fontSize: 14,
-    marginTop: 4,
-    textAlign: 'center',
+  signInButton: {
+    marginTop: 15,
   }
 });
