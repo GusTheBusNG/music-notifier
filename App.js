@@ -1,5 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback, TextInput, Keyboard, Animated, Button, KeyboardAvoidingView } from 'react-native';
+import {
+  Animated,
+  Button,
+  Dimensions,
+  Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native';
 
 import firebase from 'react-native-firebase';
 import validator from 'validator';
@@ -20,8 +30,9 @@ export default class App extends React.Component {
       red: '#f44242',
       gray: '#a5adb0'
     }
+
     this.state = {
-      borderColor: this.colors.gray,
+      emailBorderColor: this.colors.gray,
       passwordBorderColor: this.colors.gray,
       fadeAnimation: new Animated.Value(0),
       currentEmail: '',
@@ -32,10 +43,10 @@ export default class App extends React.Component {
   validateEmail(text) {
     if (validator.isEmail(text)) {
       this.firstEmailTry = false;
-      this.setState({ borderColor: this.colors.green, currentEmail: text });
+      this.setState({ emailBorderColor: this.colors.green, currentEmail: text });
       this.passwordFieldFadeIn()
     } else if (!this.firstEmailTry) {
-      this.setState({ borderColor: this.colors.red });
+      this.setState({ emailBorderColor: this.colors.red });
     }
   }
 
@@ -53,42 +64,53 @@ export default class App extends React.Component {
       this.state.fadeAnimation,
       {
         toValue: 1,
-        duration: 1000
+        duration: 500
       }
     ).start();
   }
 
   async login() {
-    var output = await firebase.auth().signInWithEmailAndPassword(this.state.currentEmail, this.state.currentPassword);
+    try {
+      var output = await firebase.auth().signInWithEmailAndPassword(this.state.currentEmail, this.state.currentPassword);
+    } catch (error) {
+      this.setState({
+        emailBorderColor: this.colors.red,
+        passwordBorderColor: this.colors.red
+      });
+      console.error('Error on login: ', error);
+    }
   }
 
   render() {
     return (
       <DissmissKeyboard>
         <View style={styles.container}>
-          <TextInput
-            style={[styles.inputFields, { borderColor: this.state.borderColor }]}
-            placeholder="Email or phone number"
-            blurOnSubmit={true}
-            onChangeText={(text) => this.validateEmail(text)}
-          />
-          <Animated.View style={{
-            alignItems: 'center',
-            width: '100%',
-            opacity: this.state.fadeAnimation
-          }}>
+          <KeyboardAvoidingView behavior='position' contentContainerStyle={{ width: Dimensions.get('window').width, alignItems: 'center' }}>
             <TextInput
-              style={[styles.inputFields, { borderColor: this.state.passwordBorderColor }]}
-              placeholder="Password"
+              style={[styles.inputFields, { borderColor: this.state.emailBorderColor }]}
+              placeholder="Email or phone number"
               blurOnSubmit={true}
-              secureTextEntry={true}
-              onChangeText={(text) => this.validatePassword(text)}
+              autoCapitalize='none'
+              onChangeText={(text) => this.validateEmail(text)}
             />
-          </Animated.View>
-          <Button
-            onPress={() => this.login()}
-            title='Sign in'
-          />
+            <Animated.View style={{
+              alignItems: 'center',
+              width: '100%',
+              opacity: this.state.fadeAnimation
+            }}>
+              <TextInput
+                style={[styles.inputFields, { borderColor: this.state.passwordBorderColor }]}
+                placeholder="Password"
+                blurOnSubmit={true}
+                secureTextEntry={true}
+                onChangeText={(text) => this.validatePassword(text)}
+              />
+            </Animated.View>
+            <Button
+              onPress={() => this.login()}
+              title='Sign in'
+            />
+          </KeyboardAvoidingView>
         </View>
       </DissmissKeyboard>
     );
@@ -106,7 +128,6 @@ var styles = StyleSheet.create({
     height: 45,
     width: '75%',
     borderStyle: 'solid',
-    borderColor: '#a5adb0',
     borderWidth: 2,
     padding: 5,
     paddingLeft: 10,
@@ -115,6 +136,6 @@ var styles = StyleSheet.create({
     margin: 5
   },
   signInButton: {
-    marginTop: 15,
+    paddingTop: 100,
   }
 });
