@@ -20,7 +20,7 @@ const DissmissKeyboard = ({ children }) => (
   </TouchableWithoutFeedback>
 );
 
-export default class App extends React.Component {
+export default class LoginInputs extends React.Component {
   constructor(props) {
     super(props);
     this.firstEmailTry = true;
