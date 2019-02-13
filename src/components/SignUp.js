@@ -28,7 +28,7 @@ export default class SignUp extends React.Component {
     };
   }
 
-  componentDidMount() {
+  onSubmit() {
     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
         firebase.database().ref('users/' + res.user.uid).set({
@@ -44,7 +44,7 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView style={{ flex: 1 }}>
           <View style={styles.viewContainer}>
             <View style={styles.subjectContainer}>
               <View style={styles.headingContainer}>
@@ -145,16 +145,16 @@ export default class SignUp extends React.Component {
 
 const styles = StyleSheet.create({
   viewContainer: {
-    justifyContent: 'center'
+    flex: 1,
+    alignItems: 'center'
   },
   subjectContainer: {
     width: Dimensions.get('window').width,
     marginBottom: 10,
-    justifyContent: 'center',
     alignItems: 'center'
   },
   headingContainer: {
-    width: '70%',
+    width: '75%',
     justifyContent: 'flex-start'
   },
   headings: {
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   inputs: {
     height: 45,
-    width: '75%',
+    width: '80%',
     borderStyle: 'solid',
     borderWidth: 2,
     borderColor: '#a5adb0',
