@@ -13,6 +13,7 @@ import {
 
 import firebase from 'react-native-firebase';
 import validator from 'validator';
+import { Navigation } from 'react-native-navigation';
 
 const DissmissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -69,6 +70,14 @@ export default class LoginInputs extends React.Component {
     ).start();
   }
 
+  goToSignUp() {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'SignUp'
+      }
+    });
+  }
+
   async login() {
     try {
       var output = await firebase.auth().signInWithEmailAndPassword(this.state.currentEmail, this.state.currentPassword);
@@ -109,6 +118,10 @@ export default class LoginInputs extends React.Component {
             <Button
               onPress={() => this.login()}
               title='Sign in'
+            />
+            <Button
+              onPress={() => this.goToSignUp()}
+              title='Sign Up'
             />
           </KeyboardAvoidingView>
         </View>

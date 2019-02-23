@@ -14,11 +14,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React Native!"
 
-@interface MusicNotiferTests : XCTestCase
+@interface MusicNotifierTests : XCTestCase
 
 @end
 
-@implementation MusicNotiferTests
+@implementation MusicNotifierTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {

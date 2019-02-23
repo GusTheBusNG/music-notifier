@@ -1,4 +1,4 @@
-package com.personal.musicnotifer;
+package com.personal.musicnotifier;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "MusicNotifer";
+        return "MusicNotifier";
     }
 }

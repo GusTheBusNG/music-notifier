@@ -1,4 +1,4 @@
-package com.personal.musicnotifer;
+package com.personal.musicnotifier;
 
 import android.annotation.SuppressLint;
 import android.app.Application;

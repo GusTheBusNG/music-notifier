@@ -18,28 +18,28 @@ export default class SignUp extends React.Component {
     super(props);
 
     this.state = {
-      firstName: 'Test First Name',
-      lastName: 'Test Last Name',
+      firstName: 'TestFirstName',
+      lastName: 'TestLastName',
       preferredName: '',
-      email: 'test1@test.com',
+      email: 'test2@test.com',
       password: 'qwerty1!',
       role: 'member',
       section: 'trumpet'
     };
   }
 
-  onSubmit() {
-    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((res) => {
-        firebase.database().ref('users/' + res.user.uid).set({
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          preferredName: this.state.preferredName,
-          role: this.state.role,
-          section: this.state.section
-        });
-      });
-  }
+  // componentDidMount() {
+  //   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+  //     .then((res) => {
+  //       firebase.database().ref('users/' + res.user.uid).set({
+  //         firstName: this.state.firstName,
+  //         lastName: this.state.lastName,
+  //         preferredName: this.state.preferredName,
+  //         role: this.state.role,
+  //         section: this.state.section
+  //       }, () => console.log('done!'));
+  //     });
+  // }
 
   render() {
     return (
