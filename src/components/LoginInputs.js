@@ -81,12 +81,11 @@ export default class LoginInputs extends React.Component {
   async componentDidMount() {
     let value = await firebase.firestore().collection('/users/').get();
     value = value.docs.pop().data();
-    console.log('Value: ', value);
   }
 
   async login() {
     try {
-      var output = await firebase.auth().signInWithEmailAndPassword(this.state.currentEmail, this.state.currentPassword);
+      await firebase.auth().signInWithEmailAndPassword(this.state.currentEmail, this.state.currentPassword);
     } catch (error) {
       this.setState({
         emailBorderColor: this.colors.red,

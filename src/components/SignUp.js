@@ -18,31 +18,27 @@ export default class SignUp extends React.Component {
     super(props);
 
     this.state = {
-      firstName: 'TestFirstName',
-      lastName: 'TestLastName',
+      firstName: '',
+      lastName: '',
       preferredName: '',
-      email: 'test1@test.com',
-      password: 'qwerty1!',
-      role: 'member',
-      section: 'trumpet'
+      email: '',
+      password: '',
+      role: '',
+      section: ''
     };
   }
 
-  async componentDidMount() {
-    // const res = await firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
-    // console.log('resolution: ' + res);
+  async submit() {
+    const res = await firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
+    const ref = await firebase.firestore().collection('users');
 
-    console.log('database reference: ', databaseReference);
-    // await databaseReference.once("value", snapshot => {
-    //   console.log('Success! Snapshot: ', snapshot);
-    // });
-    // firebase.database().ref('users/' + res.user.uid).set({
-    //   firstName: this.state.firstName,
-    //   lastName: this.state.lastName,
-    //   preferredName: this.state.preferredName,
-    //   role: this.state.role,
-    //   section: this.state.section
-    // }, () => console.log('done!'));
+    await ref.doc(res.user.uid).set({
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      preferredName: this.state.preferredName,
+      role: this.state.role,
+      section: this.state.section
+    });
   }
 
   render() {
@@ -138,7 +134,7 @@ export default class SignUp extends React.Component {
             </View>
             <Button
               title='Submit'
-              onPress={() => this.onSubmit()}
+              onPress={() => this.submit()}
             />
           </View>
         </ScrollView>
