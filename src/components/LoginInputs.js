@@ -80,7 +80,8 @@ export default class LoginInputs extends React.Component {
 
   async login() {
     try {
-      await firebase.auth().signInWithEmailAndPassword(this.state.currentEmail, this.state.currentPassword);
+      const userCredential = await firebase.auth().signInWithEmailAndPassword(this.state.currentEmail, this.state.currentPassword);
+      await AsyncStorage.setItem('currentUserId', userCredential.user.uid)
     } catch (error) {
       this.setState({
         emailBorderColor: this.colors.red,
