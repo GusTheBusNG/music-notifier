@@ -125,13 +125,16 @@ export default class LoginInputs extends React.Component {
               title='Sign Up'
             />
           </KeyboardAvoidingView>
+          <View style={button.viewContainer}>
+            <Button containerStyle={button.buttonContainer} buttonStyle={button.button} titleStyle={button.buttonText} title='Internet' />
+          </View>
         </View>
       </DissmissKeyboard>
     );
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',

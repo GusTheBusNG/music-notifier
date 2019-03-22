@@ -1,12 +1,12 @@
 import React from 'react';
 import firebase from 'react-native-firebase';
 import {
-  StyleSheet,
   ScrollView,
   SafeAreaView,
   View
 } from 'react-native';
-import { Text, Button } from 'react-native-elements';
+import { Text, Button, ListItem } from 'react-native-elements';
+import button from '../styles/buttons'
 
 export default class HomeContent extends React.Component {
   constructor(props) {
@@ -22,39 +22,36 @@ export default class HomeContent extends React.Component {
   }
 
   render() {
+    const list = [
+      {
+        title: 'Appointments',
+        icon: 'av-timer'
+      },
+      {
+        title: 'Trips',
+        icon: 'flight-takeoff'
+      }
+    ]
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, }}>
           <Text h4>Hello, {this.state.preferredName}</Text>
+          {
+            list.map((item, i) => (
+              <ListItem
+                key={i}
+                title={item.title}
+                leftIcon={{ name: item.icon }}
+                chevron={true}
+                checkmark={true}
+              />
+            ))
+          }
         </ScrollView>
-        <View style={styles.viewContainer}>
-          <Button containerStyle={styles.buttonContainer} buttonStyle={styles.button} titleStyle={styles.buttonText} title='Local network' />
-          <Button containerStyle={styles.buttonContainer} buttonStyle={styles.button} titleStyle={styles.buttonText} title='Internet' />
+        <View style={button.viewContainer}>
+          <Button containerStyle={button.buttonContainer} buttonStyle={button.button} titleStyle={button.buttonText} title='Internet' />
         </View>
       </SafeAreaView>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  viewContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'flex-end'
-  },
-  buttonContainer: {
-    padding: 15,
-  },
-  button: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    paddingTop: 7,
-    paddingLeft: 12,
-    height: 80,
-    width: 150,
-    borderRadius: 10,
-  },
-  buttonText: {
-    fontWeight: 'bold'
-  }
-})
